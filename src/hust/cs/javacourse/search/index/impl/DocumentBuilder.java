@@ -31,13 +31,5 @@ public class DocumentBuilder extends AbstractDocumentBuilder {
         BufferedReader reader;
         //三元组扫描从文档中读取内容
         AbstractTermTupleStream scanner;
-        try{
-            //创建一个输入流读取文件内容，并将其包装在缓冲读取器中
-            reader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 }
