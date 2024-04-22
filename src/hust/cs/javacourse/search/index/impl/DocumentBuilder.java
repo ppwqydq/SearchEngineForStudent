@@ -31,5 +31,6 @@ public class DocumentBuilder extends AbstractDocumentBuilder {
         BufferedReader reader;
         //三元组扫描从文档中读取内容
         AbstractTermTupleStream scanner;
+
     }
 }
