@@ -103,7 +103,7 @@ public abstract class AbstractDocument {
      * 返回文档对象包含的三元组的个数
      * @return ：文档对象包含的三元组的个数
      */
-    public  abstract  int getTupleSize();
+    public abstract int getTupleSize();
 
     /**
      * 获得Document的字符串表示
