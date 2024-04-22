@@ -3,7 +3,9 @@ package hust.cs.javacourse.search.index.impl;
 import hust.cs.javacourse.search.index.AbstractDocument;
 import hust.cs.javacourse.search.index.AbstractDocumentBuilder;
 import hust.cs.javacourse.search.index.AbstractTermTuple;
+import hust.cs.javacourse.search.parse.AbstractTermTupleScanner;
 import hust.cs.javacourse.search.parse.AbstractTermTupleStream;
+
 
 import java.io.*;
 import java.util.ArrayList;
@@ -31,6 +33,11 @@ public class DocumentBuilder extends AbstractDocumentBuilder {
         BufferedReader reader;
         //三元组扫描从文档中读取内容
         AbstractTermTupleStream scanner;
+        try{
+            reader=new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+
+            }
+        }
 
     }
 }
