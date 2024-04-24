@@ -18,7 +18,7 @@ public class StringSplitter {
      * 设置分词用的正则表达式
      * @param regex：分词用的正则表达式
      */
-    public  void setSplitRegex(String regex){
+    public void setSplitRegex(String regex){
         splitRegex = regex;
         pattern = Pattern.compile(splitRegex);
     }
