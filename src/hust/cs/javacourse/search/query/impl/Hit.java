@@ -15,6 +15,10 @@ public class Hit extends AbstractHit {
         super(docID, docPath);
     }
 
+    public Hit(int docId, String docPath, Map<AbstractTerm, AbstractPosting> termPostingMapping){
+        super(docId, docPath, termPostingMapping);
+    }
+
     @Override
     public int getDocId(){
         return this.docId;
@@ -57,5 +61,6 @@ public class Hit extends AbstractHit {
 
     @Override
     public int compareTo(AbstractHit obj) {
-        return (int) (this.score- obj.getScore());
+        return (int) (this.score - obj.getScore());
+    }
 }

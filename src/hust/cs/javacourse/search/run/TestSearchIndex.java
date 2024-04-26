@@ -18,6 +18,5 @@ public class TestSearchIndex {
      */
     public static void main(String[] args){
 
-
     }
 }
