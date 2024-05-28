@@ -17,7 +17,7 @@ public class Index extends AbstractIndex {
             return null;
         }
         else{
-            return "docIdToDocPathMap:\n" + docIdToDocPathMapping.toString() + "\ntermToPostingListMap:\n" + termToPostingListMapping.toString();
+            return "docIdToDocPathMap:\n" + docIdToDocPathMapping + "\ntermToPostingListMap:\n" + termToPostingListMapping.toString();
         }
     }
 
