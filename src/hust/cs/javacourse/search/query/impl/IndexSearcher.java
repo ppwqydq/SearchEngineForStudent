@@ -9,10 +9,7 @@ import hust.cs.javacourse.search.query.AbstractIndexSearcher;
 import hust.cs.javacourse.search.query.Sort;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class IndexSearcher extends AbstractIndexSearcher {
 
@@ -33,7 +30,7 @@ public class IndexSearcher extends AbstractIndexSearcher {
     public AbstractHit[] search(AbstractTerm queryTerm, Sort sorter) {
         AbstractPostingList postingList= index.search(queryTerm);
         if(postingList==null) return null;
-        List<AbstractHit> hits= new ArrayList<AbstractHit>();
+        List<AbstractHit> hits= new ArrayList<>();
         for(int i=0; i<postingList.size(); i++){
             AbstractPosting posting= postingList.get(i);
             String path=index.getDocName(posting.getDocId());
@@ -57,30 +54,37 @@ public class IndexSearcher extends AbstractIndexSearcher {
      */
     @Override
     public AbstractHit[] search(AbstractTerm queryTerm1, AbstractTerm queryTerm2, Sort sorter, LogicalCombination combine) {
-        AbstractPostingList postingList1= index.search(queryTerm1);
-        AbstractPostingList postingList2= index.search(queryTerm2);
-        if(postingList1==null && postingList2==null) return null;
-        List<AbstractHit> hits=new ArrayList<>();
+        AbstractPostingList postingList1 = index.search(queryTerm1);
+        AbstractPostingList postingList2 = index.search(queryTerm2);
+        // 如果两个postingList都为null，则直接返回null
+        if (postingList1 == null && postingList2 == null) return null;
+        List<AbstractHit> hits = new ArrayList<>();
+        // 使用三元运算符来避免NullPointerException
+        int length1 = (postingList1 != null) ? postingList1.size() : 0;
+        int length2 = (postingList2 != null) ? postingList2.size() : 0;
 
-        int length1,length2;
-        if(postingList1==null) length1=0;
-        else length1=postingList1.size();
-        if(postingList2==null) length2=0;
-        else length2=postingList2.size();
+        int i = 0;
+        int j = 0;
+        // 创建一个空的Posting对象，其docId为-1，以便在比较时使用
+        Posting posting = new Posting(-1, -1, null);
+        while (i < length1 || j < length2) {
+            AbstractPosting posting1;
+            if ((i < length1)) {
+                assert postingList1 != null;
+                posting1 = postingList1.get(i);
+            } else {
+                posting1 = posting;
+            }
+            AbstractPosting posting2;
+            if ((j < length2)) {
+                assert postingList2 != null;
+                posting2 = postingList2.get(j);
+            } else {
+                posting2 = posting;
+            }
 
-        int i=0;
-        int j=0;
-        Posting posting=new Posting(-1,-1,null);
-
-        while(i<length1 || j<length2){
-            AbstractPosting posting1,posting2;
-            if(i<length1) posting1=postingList1.get(i);
-            else posting1=posting;
-            if(j<length2) posting2=postingList2.get(j);
-            else posting2=posting;
-
-            int docId1=posting1.getDocId();
-            int docId2=posting2.getDocId();
+            int docId1 = posting1.getDocId();
+            int docId2 = posting2.getDocId();
 
             if(docId1==docId2){
                 String path1=index.getDocName(docId1);

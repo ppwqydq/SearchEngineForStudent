@@ -6,7 +6,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Posting extends AbstractPosting {
     public Posting(){
@@ -19,10 +21,16 @@ public class Posting extends AbstractPosting {
 
     @Override
     public boolean equals(Object obj){
-        if(obj instanceof Posting p){
-            return this.docId==p.docId&&this.freq==p.freq&&this.positions.equals(p.positions);
+        if (obj == this) {
+            return true;
         }
-        return false;
+        if (obj == null || obj.getClass() != this.getClass()) {
+            return false;
+        }
+        Posting posting = (Posting) obj;
+        Set<Integer> positions1 = new HashSet<>(positions);
+        Set<Integer> positions2 = new HashSet<>(posting.positions);
+        return docId == posting.docId && freq == posting.freq && positions1.equals(positions2);
     }
 
     @Override

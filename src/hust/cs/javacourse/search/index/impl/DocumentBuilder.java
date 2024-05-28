@@ -18,16 +18,17 @@ public class DocumentBuilder extends AbstractDocumentBuilder {
 
     @Override
     public AbstractDocument build(int docId, String docPath, AbstractTermTupleStream termTupleStream){
-        List<AbstractTermTuple> list = new ArrayList<>();
-        AbstractTermTuple termTuple;
-        //读取三元组流中的三元组对象并构造列表
-        if((termTuple=termTupleStream.next()) != null){
-            list.add(termTuple);
+        List<AbstractTermTuple> newList = new ArrayList<>();
+        // 读取termTupleStream中的所有termTuple
+        while (true) {
+            AbstractTermTuple termTuple = termTupleStream.next();
+            if (termTuple == null) {
+                break;
+            }
+            newList.add(termTuple);
         }
-        //关闭流
         termTupleStream.close();
-        //构建Document对象
-        return new Document(docId, docPath, list);
+        return new Document(docId, docPath, newList);
     }
 
     @Override
