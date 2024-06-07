@@ -9,11 +9,19 @@ import hust.cs.javacourse.search.util.FileUtil;
 import java.io.File;
 
 public class IndexBuilder extends AbstractIndexBuilder {
-
+    /**
+     * 构造函数
+     * @param docBuilder 文档构建器对象，用于构建文档
+     */
     public IndexBuilder(AbstractDocumentBuilder docBuilder){
         super(docBuilder);
     }
 
+    /**
+     * 根据指定的根目录构建索引
+     * @param rootDirectory 根目录的路径
+     * @return 构建好的索引对象
+     */
     @Override
     public AbstractIndex buildIndex(String rootDirectory) {
         //创建新的索引对象

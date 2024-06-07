@@ -14,27 +14,23 @@ public class IndexSearcher extends AbstractIndexSearcher {
 
     @Override
     public void open(String indexFile) {
+        // 加载指定文件的索引数据
         index.load(new File(indexFile));
     }
 
-    /**
-     *
-     *根据单个检索词检索
-     * @param queryTerm ：检索词
-     * @param sorter ：排序器
-     * @return
-     */
     @Override
     public AbstractHit[] search(AbstractTerm queryTerm, Sort sorter) {
-        AbstractPostingList postingList= index.search(queryTerm);
-        if(postingList==null) return new AbstractHit[0];
-        List<AbstractHit> hits= new ArrayList<>();
-        for(int i=0; i<postingList.size(); i++){
-            AbstractPosting posting= postingList.get(i);
-            String path=index.getDocName(posting.getDocId());
-            HashMap<AbstractTerm,AbstractPosting> map=new HashMap<>();
+        // 根据单个检索词进行搜索
+        AbstractPostingList postingList = index.search(queryTerm);
+        // 如果没有找到任何posting列表，返回空数组
+        if (postingList == null) return new AbstractHit[0];
+        List<AbstractHit> hits = new ArrayList<>();
+        for (int i = 0; i < postingList.size(); i++) {
+            AbstractPosting posting = postingList.get(i);
+            String path = index.getDocName(posting.getDocId());
+            HashMap<AbstractTerm, AbstractPosting> map = new HashMap<>();
             map.put(queryTerm, posting);
-            AbstractHit hit=new Hit(posting.getDocId(),path,map);
+            AbstractHit hit = new Hit(posting.getDocId(), path, map);
             hit.setScore(sorter.score(hit));
             hits.add(hit);
         }
@@ -42,30 +38,26 @@ public class IndexSearcher extends AbstractIndexSearcher {
         return hits.toArray(new AbstractHit[0]);
     }
 
-    /**
-     * 根据两个检索词检索
-     * @param queryTerm1 ：第1个检索词
-     * @param queryTerm2 ：第2个检索词
-     * @param sorter ：    排序器
-     * @param combine ：   多个检索词的逻辑组合方式
-     * @return
-     */
     @Override
     public AbstractHit[] search(AbstractTerm queryTerm1, AbstractTerm queryTerm2, Sort sorter, LogicalCombination combine) {
+        // 根据两个检索词进行搜索
         AbstractPostingList postingList1 = index.search(queryTerm1);
         AbstractPostingList postingList2 = index.search(queryTerm2);
         if (postingList1 == null && postingList2 == null) return new AbstractHit[0];
 
         Map<Integer, Map<AbstractTerm, AbstractPosting>> result;
         if (combine == LogicalCombination.AND) {
+            // 如果是AND组合，找出两个列表中都存在的文档
             result = intersect(queryTerm1, queryTerm2, postingList1, postingList2);
         } else {
+            // 如果是OR组合，找出两个列表中任一存在的文档
             result = union(queryTerm1, queryTerm2, postingList1, postingList2);
         }
         return getHits(sorter, result);
     }
 
     private AbstractHit[] getHits(Sort sorter, Map<Integer, Map<AbstractTerm, AbstractPosting>> result) {
+        // 将结果转换为AbstractHit数组，并进行排序
         if (result.isEmpty()) {
             return new AbstractHit[0];
         }
@@ -83,6 +75,7 @@ public class IndexSearcher extends AbstractIndexSearcher {
     }
 
     private Map<Integer, Map<AbstractTerm, AbstractPosting>> intersect(AbstractTerm queryTerm1, AbstractTerm queryTerm2, AbstractPostingList postingList1, AbstractPostingList postingList2) {
+        // 找出两个posting列表中都存在的文档
         Map<Integer, Map<AbstractTerm, AbstractPosting>> result = new HashMap<>();
         int i = 0, j = 0;
         while (i < postingList1.size() && j < postingList2.size()) {
@@ -105,6 +98,7 @@ public class IndexSearcher extends AbstractIndexSearcher {
     }
 
     private Map<Integer, Map<AbstractTerm, AbstractPosting>> union(AbstractTerm queryTerm1, AbstractTerm queryTerm2, AbstractPostingList postingList1, AbstractPostingList postingList2) {
+        // 找出两个posting列表中任一存在的文档
         Map<Integer, Map<AbstractTerm, AbstractPosting>> result = new HashMap<>();
         int i = 0, j = 0;
         while (i < postingList1.size() && j < postingList2.size()) {
@@ -135,6 +129,7 @@ public class IndexSearcher extends AbstractIndexSearcher {
     }
 
     private void put(AbstractTerm queryTerm1, AbstractPostingList postingList1, Map<Integer, Map<AbstractTerm, AbstractPosting>> result, int i) {
+        // 将剩余的posting添加到结果中
         while (i < postingList1.size()) {
             AbstractPosting posting1 = postingList1.get(i);
             Map<AbstractTerm, AbstractPosting> termPostingMapping = new HashMap<>();
@@ -143,4 +138,5 @@ public class IndexSearcher extends AbstractIndexSearcher {
             i++;
         }
     }
+
 }
